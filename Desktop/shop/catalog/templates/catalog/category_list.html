@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Категории - Магазин{% endblock %}
+
+{% block content %}
+<h2>Категории товаров</h2>
+<ul>
+    {% for category in categories %}
+        <li><a href="{% url 'catalog:product_list_by_category' category.slug %}">{{ category.name }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

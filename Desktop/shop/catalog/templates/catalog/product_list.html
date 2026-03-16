@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.name }} - Магазин{% endblock %}
+
+{% block content %}
+<h2>Товары в категории "{{ category.name }}"</h2>
+<div>
+    {% for product in page_obj %}
+        <div class="product">
+            {% if product.images.exists %}
+                <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+                <div class="gallery">
+                    {% for img in product.images.all %}
+                        <img src="{{ img.image.url }}" alt="{{ img.alt_text }}">
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Нет изображений</p>
+            {% endif %}
+            <h3><a href="{% url 'catalog:product_detail' product.slug %}">{{ product.name }}</a></h3>
+            <p class="price">{{ product.price }} руб.</p>
+            {% if product.old_price and product.old_price > product.price %}
+                <p class="old-price">{{ product.old_price }} руб.</p>
+            {% endif %}
+            <p>В наличии: {{ product.stock }}</p>
+        </div>
+    {% endfor %}
+</div>
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; Первая</a>
+        <a href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
+    {% endif %}
+
+    <span class="current">
+        Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+    </span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Следующая</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Последняя &raquo;</a>
+    {% endif %}
+</div>
+{% endblock %}
