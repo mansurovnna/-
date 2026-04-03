@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Корзина{% endblock %}
+
+{% block content %}
+<h1>Корзина</h1>
+
+{% if cart_items %}
+  <div style="display:flex; flex-direction:column; gap:10px;">
+    {% for item in cart_items %}
+      <div style="border:1px solid #ccc; padding:10px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <a href="{% url 'catalog:product_detail' item.product.slug %}">{{ item.product.name }}</a>
+          <br>
+          {{ item.product.price }} тг × {{ item.quantity }} = {{ item.item_total }} тг
+        </div>
+        <div>
+          <a href="{% url 'catalog:increase_quantity' item.product.id %}">+</a>
+          <span style="margin:0 10px;">{{ item.quantity }}</span>
+          <a href="{% url 'catalog:decrease_quantity' item.product.id %}">-</a>
+          <a href="{% url 'catalog:remove_from_cart' item.product.id %}" style="margin-left:20px; color:red;">Удалить</a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div style="margin-top:20px; font-weight:bold;">
+    <p>Позиций: {{ positions }}</p>
+    <p>Всего товаров: {{ total_quantity }}</p>
+    <p>Итоговая сумма: {{ total_sum }} тг</p>
+  </div>
+
+  <p><a href="{% url 'catalog:checkout' %}" style="padding:10px 20px; background:#28a745; color:white; text-decoration:none; border-radius:4px;">Оформить заказ</a></p>
+{% else %}
+  <p>Корзина пуста.</p>
+{% endif %}
+
+<p><a href="{% url 'catalog:home' %}">← Продолжить покупки</a></p>
+{% endblock %}

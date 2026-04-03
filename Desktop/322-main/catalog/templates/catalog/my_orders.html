@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Мои заказы{% endblock %}
+
+{% block content %}
+<h1>Мои заказы</h1>
+
+{% if orders %}
+  <div style="display:flex; flex-direction:column; gap:10px;">
+    {% for order in orders %}
+      <div style="border:1px solid #ccc; padding:10px; border-radius:6px;">
+        <h3>Заказ #{{ order.id }}</h3>
+        <p>Дата: {{ order.created_at|date:"d.m.Y H:i" }}</p>
+        <p>Статус: {{ order.get_status_display }}</p>
+        <p>Сумма: {{ order.get_total_sum }} тг</p>
+        <details>
+          <summary>Показать товары</summary>
+          <ul>
+            {% for item in order.items.all %}
+              <li>{{ item.product.name }} × {{ item.quantity }} = {{ item.get_total }} тг</li>
+            {% endfor %}
+          </ul>
+        </details>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>У вас нет заказов.</p>
+{% endif %}
+
+<p><a href="{% url 'catalog:home' %}">← На главную</a></p>
+{% endblock %}
